@@ -18,7 +18,6 @@ public class BiliInfo {
     protected String apiURL1 = "https://api.bilibili.com/x/web-interface/view?";
     protected String apiURL2 = "&type=jsonp";
     protected String apiURL;
-    private String appDirectory = "";
 
     private String title = "";
     private String imgurl = "";
@@ -36,7 +35,7 @@ public class BiliInfo {
     private int favorite = 0;
     private int reply = 0;
 
-    public BiliInfo(String avn, String appDirectory) {
+    public BiliInfo(String avn) {
         if (avn.startsWith("a") || avn.startsWith("A")) {
             this.videourl = videourl_av + avn.substring(2);
             this.apiURL = apiURL1 + "aid=" + avn.substring(2) + apiURL2;
@@ -44,7 +43,6 @@ public class BiliInfo {
             this.videourl = videourl_bv + avn.substring(2);
             this.apiURL = apiURL1 + "bvid=BV" + avn.substring(2) + apiURL2;
         }
-        this.appDirectory = appDirectory;
 
         String body = null;
         try {
@@ -85,8 +83,8 @@ public class BiliInfo {
                 this.reply = statJson.get("reply").getAsInt();
             }
 
-            downloadImg(headurl, "head");
-            downloadImg(imgurl, "img");
+            /*downloadImg(headurl, "head");
+            downloadImg(imgurl, "img");*/
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -94,7 +92,7 @@ public class BiliInfo {
 
     }
 
-    public void downloadImg(String imgurl, String filename) {
+    /*public void downloadImg(String imgurl, String filename) {
         try {
             URL img = new URL(imgurl);
             HttpURLConnection conn = (HttpURLConnection) img.openConnection();
@@ -115,7 +113,7 @@ public class BiliInfo {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     private byte[] readInputStream(InputStream inStream) throws IOException {
 
