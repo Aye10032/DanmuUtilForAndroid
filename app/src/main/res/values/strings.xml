@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">DanmuUtilForAndroid</string>
+    <string name="avTV">TextView</string>
+    <string name="searchtext">查询</string>
+</resources>
