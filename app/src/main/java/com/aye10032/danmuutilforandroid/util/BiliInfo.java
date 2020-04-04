@@ -1,5 +1,8 @@
 package com.aye10032.danmuutilforandroid.util;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -13,17 +16,20 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
 import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class BiliInfo{
 
-    protected String apiURL1 = "https://api.bilibili.com/x/web-interface/view?";
-    protected String apiURL2 = "&type=jsonp";
-    protected String apiURL;
+    private static String apiURL1 = "https://api.bilibili.com/x/web-interface/view?";
+    private static String apiURL2 = "&type=jsonp";
+    private static String videourl_av = "https://www.bilibili.com/video/av";
+    private static String videourl_bv = "https://www.bilibili.com/video/BV";
+    private String apiURL;
 
     private String title = "";
     private String imgurl = "";
-    private String videourl_av = "https://www.bilibili.com/video/av";
-    private String videourl_bv = "https://www.bilibili.com/video/BV";
     private String videourl;
 
     private String headurl = "";
@@ -35,6 +41,10 @@ public class BiliInfo{
     private int coin = 0;
     private int favorite = 0;
     private int reply = 0;
+
+    private Bitmap img = null;
+    private Bitmap head = null;
+
     CloseableHttpClient httpclient;
 
     public BiliInfo(String avn) {
@@ -85,49 +95,44 @@ public class BiliInfo{
                 this.reply = statJson.get("reply").getAsInt();
             }
 
-            /*downloadImg(headurl, "head");
-            downloadImg(imgurl, "img");*/
-
+            head = returnBitMap(headurl);
+            img = returnBitMap(imgurl);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
     }
 
-    /*public void downloadImg(String imgurl, String filename) {
+    public Bitmap returnBitMap(final String url){
+
+        final Bitmap[] bitmap = new Bitmap[1];
+
+        /*new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        }).start();*/
+        URL imageurl = null;
+
         try {
-            URL img = new URL(imgurl);
-            HttpURLConnection conn = (HttpURLConnection) img.openConnection();
-            conn.setRequestMethod("GET");
-            conn.setConnectTimeout(5 * 1000);
-            InputStream inStream = conn.getInputStream();
-            byte[] data = readInputStream(inStream);
-            File imageFile = new File(appDirectory + "\\image\\" + filename + ".jpg");
-            FileOutputStream outStream = new FileOutputStream(imageFile);
-            outStream.write(data);
-            outStream.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (ProtocolException e) {
-            e.printStackTrace();
+            imageurl = new URL(url);
         } catch (MalformedURLException e) {
             e.printStackTrace();
+        }
+        try {
+            assert imageurl != null;
+            HttpURLConnection conn = (HttpURLConnection)imageurl.openConnection();
+            conn.setDoInput(true);
+            conn.connect();
+            InputStream is = conn.getInputStream();
+            bitmap[0] = BitmapFactory.decodeStream(is);
+            is.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }*/
 
-    private byte[] readInputStream(InputStream inStream) throws IOException {
-
-        ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-        byte[] buffer = new byte[1024];
-        int len = 0;
-        while ((len = inStream.read(buffer)) != -1) {
-            outStream.write(buffer, 0, len);
-        }
-        inStream.close();
-        return outStream.toByteArray();
-
+        return bitmap[0];
     }
 
     public String getTitle() {
@@ -172,5 +177,13 @@ public class BiliInfo{
 
     public String getHeadurl() {
         return headurl;
+    }
+
+    public Bitmap getHead() {
+        return head;
+    }
+
+    public Bitmap getImg() {
+        return img;
     }
 }
