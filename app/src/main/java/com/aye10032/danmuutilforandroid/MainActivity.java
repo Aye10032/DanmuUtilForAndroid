@@ -17,10 +17,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity{
 
     private EditText avinput;
-    private TextView getText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,9 +27,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         avinput = findViewById(R.id.avET);
-        getText = findViewById(R.id.searchTV);
+        TextView getText = findViewById(R.id.searchTV);
 
-        getText.setOnClickListener(this);
+        getText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String mid = avinput.getText().toString();
+                AyeCompile compile = new AyeCompile(mid);
+                boolean flag = false;
+                if (compile.hasAV()){
+                    mid = compile.getAVString();
+                    flag = true;
+                }else if (compile.hasBV()){
+                    mid = compile.getBVString();
+                    flag = true;
+                }
+                if (flag) {
+//                    System.out.println(new BiliInfo(mid).getTitle());
+                    final String finalMid = mid;
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            System.out.println(new BiliInfo(finalMid).getTitle());
+                        }
+                    }).start();
+                }else {
+                    Toast.makeText(MainActivity.this, "格式错误，请重试", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
         Intent intent = getIntent();
         String action = intent.getAction();
@@ -81,28 +106,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         bos.close();
         //指定编码格式为UIT-8
         return new String(bos.toByteArray(), "UTF-8");
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.searchTV:
-                String mid = avinput.getText().toString();
-                AyeCompile compile = new AyeCompile(mid);
-                boolean flag = false;
-                if (compile.hasAV()){
-                    mid = compile.getAVString();
-                    flag = true;
-                }else if (compile.hasBV()){
-                    mid = compile.getBVString();
-                    flag = true;
-                }
-                if (flag) {
-                    System.out.println(new BiliInfo(mid).getTitle());
-                }else {
-                    Toast.makeText(MainActivity.this, "格式错误，请重试", Toast.LENGTH_SHORT).show();
-                }
-                break;
-        }
     }
 }

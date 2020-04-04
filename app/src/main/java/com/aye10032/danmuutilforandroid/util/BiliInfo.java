@@ -3,17 +3,18 @@ package com.aye10032.danmuutilforandroid.util;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
 
-public class BiliInfo {
+public class BiliInfo{
 
     protected String apiURL1 = "https://api.bilibili.com/x/web-interface/view?";
     protected String apiURL2 = "&type=jsonp";
@@ -34,8 +35,11 @@ public class BiliInfo {
     private int coin = 0;
     private int favorite = 0;
     private int reply = 0;
+    CloseableHttpClient httpclient;
 
     public BiliInfo(String avn) {
+        httpclient = HttpClients.createDefault();
+
         if (avn.startsWith("a") || avn.startsWith("A")) {
             this.videourl = videourl_av + avn.substring(2);
             this.apiURL = apiURL1 + "aid=" + avn.substring(2) + apiURL2;
@@ -44,19 +48,17 @@ public class BiliInfo {
             this.apiURL = apiURL1 + "bvid=BV" + avn.substring(2) + apiURL2;
         }
 
+        HttpGet httpget = new HttpGet(new String(apiURL));
+
+        CloseableHttpResponse response = null;
         String body = null;
         try {
+            response = httpclient.execute(httpget);
 
-            OkHttpClient client = new OkHttpClient().newBuilder()
-                    .build();
-            Request request = new Request.Builder()
-                    .url(apiURL)
-                    .method("GET", null)
-                    .build();
 
-            Response response = client.newCall(request).execute();
-            if (response.body() != null) {
-                body = new String(response.body().bytes());
+            if (HttpStatus.SC_OK == response.getStatusLine().getStatusCode()) {
+                HttpEntity httpEntity = response.getEntity();
+                body = EntityUtils.toString(httpEntity, "UTF-8");
             }
 
             JsonParser jsonParser = new JsonParser();

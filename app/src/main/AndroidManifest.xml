@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.aye10032.danmuutilforandroid">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:fitsSystemWindows="true"
@@ -13,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup">
-        <activity android:name=".MainActivity">
+        <activity android:name="com.aye10032.danmuutilforandroid.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
