@@ -103,14 +103,14 @@ public class MainActivity extends AppCompatActivity {
 
         LinearLayout.LayoutParams layoutParam
                 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ScreenUtil.dp2px(this, 110));
-        layoutParam.setMargins(0, ScreenUtil.dp2px(this,10), 0, 0);
+        layoutParam.setMargins(0, ScreenUtil.dp2px(this, 10), 0, 0);
 
         linearLayout.setLayoutParams(layoutParam);
 
         ImageView imageView = new ImageView(this);
         LinearLayout.LayoutParams imgParam
                 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 3.5f);
-        imgParam.setMargins(ScreenUtil.dp2px(this,10),0,0,0);
+        imgParam.setMargins(ScreenUtil.dp2px(this, 10), 0, 0, 0);
         imageView.setLayoutParams(imgParam);
         imageView.setImageBitmap(data.getImg());
 
@@ -127,15 +127,15 @@ public class MainActivity extends AppCompatActivity {
         titleText.setText(data.getTitle());
         LinearLayout.LayoutParams titleParam
                 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 1.0f);
-        titleParam.setMargins(ScreenUtil.dp2px(this,10),0,ScreenUtil.dp2px(this,10),0);
+        titleParam.setMargins(ScreenUtil.dp2px(this, 10), 0, ScreenUtil.dp2px(this, 10), 0);
         titleText.setLayoutParams(titleParam);
 
-        TextView midText = new TextView(this);
+        final TextView midText = new TextView(this);
         midText.setGravity(Gravity.LEFT);
         midText.setText(data.getMid());
         LinearLayout.LayoutParams midParam
                 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 2.0f);
-        midParam.setMargins(ScreenUtil.dp2px(this,10),0,ScreenUtil.dp2px(this,10),0);
+        midParam.setMargins(ScreenUtil.dp2px(this, 10), 0, ScreenUtil.dp2px(this, 10), 0);
         midText.setLayoutParams(midParam);
 
         TextView upText = new TextView(this);
@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
         upText.setText(String.format("up主:%s", data.getUp()));
         LinearLayout.LayoutParams upParam
                 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 2.0f);
-        upParam.setMargins(ScreenUtil.dp2px(this,10),0,ScreenUtil.dp2px(this,10),0);
+        upParam.setMargins(ScreenUtil.dp2px(this, 10), 0, ScreenUtil.dp2px(this, 10), 0);
         upText.setLayoutParams(upParam);
 
         titleLayout.addView(titleText);
@@ -153,6 +153,17 @@ public class MainActivity extends AppCompatActivity {
         linearLayout.addView(imageView);
         linearLayout.addView(titleLayout);
         searchlist.addView(linearLayout);
+
+        linearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String bv = midText.getText().toString();
+                Intent intent = new Intent(MainActivity.this, DanmulistActivity.class);
+                intent.putExtra("bvid", bv);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 
     private void textReceive(Intent intent) {
