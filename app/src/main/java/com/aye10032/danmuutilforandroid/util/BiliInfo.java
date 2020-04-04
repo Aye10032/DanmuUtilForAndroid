@@ -34,8 +34,8 @@ public class BiliInfo{
 
     private String headurl = "";
     private String up = "";
+    private String mid = "";
 
-    private int view = 0;
     private int danmaku = 0;
     private int like = 0;
     private int coin = 0;
@@ -81,13 +81,13 @@ public class BiliInfo{
                 JsonObject dataJson = jsonObject.get("data").getAsJsonObject();
                 this.title = dataJson.get("title").getAsString();
                 this.imgurl = dataJson.get("pic").getAsString();
+                this.mid = dataJson.get("bvid").getAsString();
 
                 JsonObject ownerJson = dataJson.get("owner").getAsJsonObject();
                 this.headurl = ownerJson.get("face").getAsString();
                 this.up = ownerJson.get("name").getAsString();
 
                 JsonObject statJson = dataJson.get("stat").getAsJsonObject();
-                this.view = statJson.get("view").getAsInt();
                 this.danmaku = statJson.get("danmaku").getAsInt();
                 this.like = statJson.get("like").getAsInt();
                 this.coin = statJson.get("coin").getAsInt();
@@ -159,8 +159,8 @@ public class BiliInfo{
         return favorite;
     }
 
-    public int getView() {
-        return view;
+    public String getMid() {
+        return mid;
     }
 
     public int getDanmaku() {

@@ -23,7 +23,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
 
     private EditText avinput;
     BiliInfo biliInfo;
@@ -45,10 +45,10 @@ public class MainActivity extends AppCompatActivity{
                 String mid = avinput.getText().toString();
                 AyeCompile compile = new AyeCompile(mid);
                 boolean flag = false;
-                if (compile.hasAV()){
+                if (compile.hasAV()) {
                     mid = compile.getAVString();
                     flag = true;
-                }else if (compile.hasBV()){
+                } else if (compile.hasBV()) {
                     mid = compile.getBVString();
                     flag = true;
                 }
@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity{
                             data.setLike(biliInfo.getLike());
                             data.setReply(biliInfo.getReply());
                             data.setUp(biliInfo.getUp());
-                            data.setView(biliInfo.getView());
+                            data.setMid(biliInfo.getMid());
                         }
                     });
                     getmsg.start();
@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity{
                         e.printStackTrace();
                     }
                     addCard();
-                }else {
+                } else {
                     Toast.makeText(MainActivity.this, "格式错误，请重试", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -95,28 +95,63 @@ public class MainActivity extends AppCompatActivity{
         }
     }
 
-    private void addCard(){
+    private void addCard() {
         LinearLayout linearLayout = new LinearLayout(this);
         linearLayout.setOrientation(LinearLayout.HORIZONTAL);
-        linearLayout.setPadding(10, 10, 10, 10);
         linearLayout.setGravity(Gravity.CENTER_HORIZONTAL);
+        linearLayout.setBackgroundResource(R.drawable.shape_ll);
 
+        LinearLayout.LayoutParams layoutParam
+                = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ScreenUtil.dp2px(this, 110));
+        layoutParam.setMargins(0, ScreenUtil.dp2px(this,10), 0, 0);
+
+        linearLayout.setLayoutParams(layoutParam);
 
         ImageView imageView = new ImageView(this);
-        int imageWidth = ScreenUtil.dp2px(this, 140);
-        int imageHeight = ScreenUtil.dp2px(this, 140);
-        imageView.setLayoutParams(new LinearLayout.LayoutParams(imageWidth, imageHeight));
-        imageView.setPadding(10, 10, 10, 10);
+        LinearLayout.LayoutParams imgParam
+                = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 3.5f);
+        imgParam.setMargins(ScreenUtil.dp2px(this,10),0,0,0);
+        imageView.setLayoutParams(imgParam);
         imageView.setImageBitmap(data.getImg());
 
-        TextView textView = new TextView(this);
-        textView.setTextSize(30);
-        textView.setTextColor(Color.BLACK);
-        textView.setGravity(Gravity.CENTER_HORIZONTAL);
-        textView.setText(data.getTitle());
+        LinearLayout titleLayout = new LinearLayout(this);
+        titleLayout.setOrientation(LinearLayout.VERTICAL);
+        titleLayout.setGravity(Gravity.CENTER);
+        titleLayout.setLayoutParams(
+                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 2.0f));
+
+        TextView titleText = new TextView(this);
+        titleText.setTextSize(25);
+        titleText.setTextColor(Color.BLACK);
+        titleText.setGravity(Gravity.CENTER);
+        titleText.setText(data.getTitle());
+        LinearLayout.LayoutParams titleParam
+                = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 1.0f);
+        titleParam.setMargins(ScreenUtil.dp2px(this,10),0,ScreenUtil.dp2px(this,10),0);
+        titleText.setLayoutParams(titleParam);
+
+        TextView midText = new TextView(this);
+        midText.setGravity(Gravity.LEFT);
+        midText.setText(data.getMid());
+        LinearLayout.LayoutParams midParam
+                = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 2.0f);
+        midParam.setMargins(ScreenUtil.dp2px(this,10),0,ScreenUtil.dp2px(this,10),0);
+        midText.setLayoutParams(midParam);
+
+        TextView upText = new TextView(this);
+        upText.setGravity(Gravity.LEFT);
+        upText.setText(String.format("up主:%s", data.getUp()));
+        LinearLayout.LayoutParams upParam
+                = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 2.0f);
+        upParam.setMargins(ScreenUtil.dp2px(this,10),0,ScreenUtil.dp2px(this,10),0);
+        upText.setLayoutParams(upParam);
+
+        titleLayout.addView(titleText);
+        titleLayout.addView(midText);
+        titleLayout.addView(upText);
 
         linearLayout.addView(imageView);
-        linearLayout.addView(textView);
+        linearLayout.addView(titleLayout);
         searchlist.addView(linearLayout);
     }
 
@@ -126,7 +161,7 @@ public class MainActivity extends AppCompatActivity{
             AyeCompile compile = new AyeCompile(sharedText);
             if (compile.hasAV()) {
                 avinput.setText(compile.getAVString());
-            }else if (compile.hasBV()){
+            } else if (compile.hasBV()) {
                 avinput.setText(compile.getBVString());
             }
         }

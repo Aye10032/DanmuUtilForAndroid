@@ -9,8 +9,8 @@ public class VideoData {
 
     private Bitmap head = null;
     private String up = "";
+    private String mid = "";
 
-    private int view = 0;
     private int danmaku = 0;
     private int like = 0;
     private int coin = 0;
@@ -33,8 +33,8 @@ public class VideoData {
         this.up = up;
     }
 
-    public void setView(int view) {
-        this.view = view;
+    public void setMid(String mid) {
+        this.mid = mid;
     }
 
     public void setDanmaku(int danmaku) {
@@ -81,8 +81,8 @@ public class VideoData {
         return favorite;
     }
 
-    public int getView() {
-        return view;
+    public String getMid() {
+        return mid;
     }
 
     public int getDanmaku() {
