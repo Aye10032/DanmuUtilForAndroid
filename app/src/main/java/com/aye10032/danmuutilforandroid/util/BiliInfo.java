@@ -3,6 +3,7 @@ package com.aye10032.danmuutilforandroid.util;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -19,8 +20,10 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
-public class BiliInfo{
+public class BiliInfo {
 
     private static String apiURL1 = "https://api.bilibili.com/x/web-interface/view?";
     private static String apiURL2 = "&type=jsonp";
@@ -32,18 +35,13 @@ public class BiliInfo{
     private String imgurl = "";
     private String videourl;
 
-    private String headurl = "";
     private String up = "";
     private String mid = "";
 
-    private int danmaku = 0;
-    private int like = 0;
-    private int coin = 0;
-    private int favorite = 0;
-    private int reply = 0;
-
     private Bitmap img = null;
-    private Bitmap head = null;
+
+    List<String> cidlist = new ArrayList<>();
+    List<String> partlist = new ArrayList<>();
 
     CloseableHttpClient httpclient;
 
@@ -84,18 +82,19 @@ public class BiliInfo{
                 this.mid = dataJson.get("bvid").getAsString();
 
                 JsonObject ownerJson = dataJson.get("owner").getAsJsonObject();
-                this.headurl = ownerJson.get("face").getAsString();
                 this.up = ownerJson.get("name").getAsString();
 
-                JsonObject statJson = dataJson.get("stat").getAsJsonObject();
-                this.danmaku = statJson.get("danmaku").getAsInt();
-                this.like = statJson.get("like").getAsInt();
-                this.coin = statJson.get("coin").getAsInt();
-                this.favorite = statJson.get("favorite").getAsInt();
-                this.reply = statJson.get("reply").getAsInt();
+                JsonArray pages = dataJson.getAsJsonArray("pages");
+                for (JsonElement listElement : pages) {
+                    if (listElement.isJsonObject()) {
+                        JsonObject listObject = listElement.getAsJsonObject();
+
+                        cidlist.add(listObject.get("cid").getAsString());
+                        partlist.add(listObject.get("part").getAsString());
+                    }
+                }
             }
 
-            head = returnBitMap(headurl);
             img = returnBitMap(imgurl);
         } catch (IOException e) {
             e.printStackTrace();
@@ -103,7 +102,7 @@ public class BiliInfo{
 
     }
 
-    public Bitmap returnBitMap(final String url){
+    public Bitmap returnBitMap(final String url) {
 
         final Bitmap[] bitmap = new Bitmap[1];
 
@@ -122,7 +121,7 @@ public class BiliInfo{
         }
         try {
             assert imageurl != null;
-            HttpURLConnection conn = (HttpURLConnection)imageurl.openConnection();
+            HttpURLConnection conn = (HttpURLConnection) imageurl.openConnection();
             conn.setDoInput(true);
             conn.connect();
             InputStream is = conn.getInputStream();
@@ -139,51 +138,38 @@ public class BiliInfo{
         return this.title;
     }
 
-    public String getImgurl() {
-        return this.imgurl;
-    }
-
-    public String getVideourl() {
-        return this.videourl;
-    }
-
-    public int getLike() {
-        return like;
-    }
-
-    public int getCoin() {
-        return coin;
-    }
-
-    public int getFavorite() {
-        return favorite;
-    }
-
     public String getMid() {
         return mid;
-    }
-
-    public int getDanmaku() {
-        return danmaku;
-    }
-
-    public int getReply() {
-        return reply;
     }
 
     public String getUp() {
         return up;
     }
 
-    public String getHeadurl() {
-        return headurl;
-    }
-
-    public Bitmap getHead() {
-        return head;
-    }
-
     public Bitmap getImg() {
         return img;
+    }
+
+    public String[] getCid() {
+        String[] cids = new String[cidlist.size()];
+
+        for (int i = 0; i < cidlist.size(); i++) {
+            cids[i] = cidlist.get(i);
+        }
+
+        return cids;
+    }
+
+    public String[] getPart() {
+        String[] part = new String[partlist.size()];
+        for (int i = 0; i < partlist.size(); i++) {
+            if (partlist.get(i).equals("")) {
+                part[i] = "p" + i;
+            } else {
+                part[i] = partlist.get(i);
+            }
+        }
+
+        return part;
     }
 }

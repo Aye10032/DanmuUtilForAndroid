@@ -1,5 +1,8 @@
 package com.aye10032.danmuutilforandroid.util;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -18,6 +21,10 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -308,6 +315,38 @@ public class BiliUtil {
         }
 
         return danmuList;
+    }
+
+    public Bitmap returnBitMap(final String url) {
+
+        final Bitmap[] bitmap = new Bitmap[1];
+
+        /*new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        }).start();*/
+        URL imageurl = null;
+
+        try {
+            imageurl = new URL(url);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        try {
+            assert imageurl != null;
+            HttpURLConnection conn = (HttpURLConnection) imageurl.openConnection();
+            conn.setDoInput(true);
+            conn.connect();
+            InputStream is = conn.getInputStream();
+            bitmap[0] = BitmapFactory.decodeStream(is);
+            is.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return bitmap[0];
     }
 
 }

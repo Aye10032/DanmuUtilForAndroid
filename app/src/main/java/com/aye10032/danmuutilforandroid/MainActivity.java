@@ -22,6 +22,12 @@ import com.aye10032.danmuutilforandroid.util.ScreenUtil;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     BiliInfo biliInfo;
     VideoData data = new VideoData();
     LinearLayout searchlist;
+    Map<String, List<String[]>> searchmap = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,15 +66,11 @@ public class MainActivity extends AppCompatActivity {
                         public void run() {
                             biliInfo = new BiliInfo(finalMid);
                             data.setTitle(biliInfo.getTitle());
-                            data.setCoin(biliInfo.getCoin());
-                            data.setDanmaku(biliInfo.getDanmaku());
-                            data.setFavorite(biliInfo.getFavorite());
-                            data.setHead(biliInfo.getHead());
                             data.setImg(biliInfo.getImg());
-                            data.setLike(biliInfo.getLike());
-                            data.setReply(biliInfo.getReply());
                             data.setUp(biliInfo.getUp());
                             data.setMid(biliInfo.getMid());
+                            data.setCidlist(biliInfo.getCid());
+                            data.setPartlist(biliInfo.getPart());
                         }
                     });
                     getmsg.start();
@@ -76,6 +79,10 @@ public class MainActivity extends AppCompatActivity {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
+                    List<String[]> list = new ArrayList<>();
+                    list.add(data.getCidlist());
+                    list.add(data.getPartlist());
+                    searchmap.put(data.getMid(), list);
                     addCard();
                 } else {
                     Toast.makeText(MainActivity.this, "格式错误，请重试", Toast.LENGTH_SHORT).show();
@@ -157,11 +164,16 @@ public class MainActivity extends AppCompatActivity {
         linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                System.out.println();
                 String bv = midText.getText().toString();
+                String[] cid = Objects.requireNonNull(searchmap.get(bv)).get(0);
+                String[] part = Objects.requireNonNull(searchmap.get(bv)).get(1);
+                System.out.println(Arrays.toString(part));
                 Intent intent = new Intent(MainActivity.this, DanmulistActivity.class);
                 intent.putExtra("bvid", bv);
+                intent.putExtra("cid",cid);
+                intent.putExtra("part",part);
                 startActivity(intent);
-                finish();
             }
         });
     }
