@@ -120,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
         imgParam.setMargins(ScreenUtil.dp2px(this, 10), 0, 0, 0);
         imageView.setLayoutParams(imgParam);
         imageView.setImageBitmap(data.getImg());
+        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
 
         LinearLayout titleLayout = new LinearLayout(this);
         titleLayout.setOrientation(LinearLayout.VERTICAL);
@@ -164,11 +165,9 @@ public class MainActivity extends AppCompatActivity {
         linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println();
                 String bv = midText.getText().toString();
                 String[] cid = Objects.requireNonNull(searchmap.get(bv)).get(0);
                 String[] part = Objects.requireNonNull(searchmap.get(bv)).get(1);
-                System.out.println(Arrays.toString(part));
                 Intent intent = new Intent(MainActivity.this, DanmulistActivity.class);
                 intent.putExtra("bvid", bv);
                 intent.putExtra("cid",cid);

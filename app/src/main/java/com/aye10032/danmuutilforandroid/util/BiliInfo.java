@@ -73,7 +73,6 @@ public class BiliInfo {
             JsonElement element = jsonParser.parse(body);
 
             if (element.isJsonObject()) {
-                System.out.println(element);
                 JsonObject jsonObject = element.getAsJsonObject();
 
                 JsonObject dataJson = jsonObject.get("data").getAsJsonObject();

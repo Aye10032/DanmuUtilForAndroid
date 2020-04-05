@@ -7,10 +7,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,11 +22,15 @@ import com.aye10032.danmuutilforandroid.util.CRC32Util;
 import com.aye10032.danmuutilforandroid.util.ScreenUtil;
 import com.google.gson.JsonObject;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public class DanmulistActivity extends AppCompatActivity {
 
     LinearLayout danmulistlayout;
+    ScrollView scrollView;
 
     String[] cidlist;
     String[] partlist;
@@ -34,10 +40,13 @@ public class DanmulistActivity extends AppCompatActivity {
     int choice;
     CRC32Util crc32Util;
     List<String[]> danmulist;
+    Map<String, UserDataClass> shaMap = new HashMap<>();
 
-    UserDataClass userDataClass = new UserDataClass();
+//    UserDataClass userDataClass = new UserDataClass();
 
     boolean flag;
+
+    int page = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +55,7 @@ public class DanmulistActivity extends AppCompatActivity {
 
         listTV = findViewById(R.id.listText);
         searchTV = findViewById(R.id.danmuTV);
+        scrollView = findViewById(R.id.danmuSV);
         danmulistlayout = findViewById(R.id.danmuLL);
         flag = true;
         crc32Util = new CRC32Util();
@@ -63,7 +73,23 @@ public class DanmulistActivity extends AppCompatActivity {
             }
         });
 
-        updatePage(0);
+        scrollView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                View contentView = scrollView.getChildAt(0);
+                if (contentView != null && contentView.getMeasuredHeight() == scrollView.getScrollY() + scrollView.getHeight()) {
+                    if (page > danmulist.size()) {
+                        Toast.makeText(DanmulistActivity.this, "已经是最后了", Toast.LENGTH_SHORT).show();
+                    } else {
+                        updatePage();
+                        Toast.makeText(DanmulistActivity.this, "已加载", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
+
+        updateDanmu(0);
+        updatePage();
     }
 
     private void showSingleChoiceDialog(final String[] list) {
@@ -86,14 +112,16 @@ public class DanmulistActivity extends AppCompatActivity {
                             Toast.makeText(DanmulistActivity.this,
                                     "你选择了" + list[choice],
                                     Toast.LENGTH_SHORT).show();
-                            updatePage(choice);
+                            updateDanmu(choice);
+                            danmulistlayout.removeAllViews();
+                            updatePage();
                         }
                     }
                 });
         singleChoiceDialog.show();
     }
 
-    private void updatePage(final int page) {
+    private void updateDanmu(final int page) {
         Thread getDanmu = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -111,44 +139,56 @@ public class DanmulistActivity extends AppCompatActivity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-        for (int i = 0; i < 6; i++) {
-
-            String danmu = danmulist.get(i)[0];
-            final String uid = crc32Util.solve(danmulist.get(i)[1]);
-
-            Thread getInfo = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    BiliUtil biliUtil = new BiliUtil();
-                    try {
-                        JsonObject userInfo = new BiliUtil().getUpInfo(uid)
-                                .get("data").getAsJsonObject()
-                                .get("card").getAsJsonObject();
-
-                        String face = userInfo.get("face").getAsString();
-                        System.out.println(face);
-                        userDataClass.setHead(biliUtil.returnBitMap(face));
-                        userDataClass.setMid(uid);
-                        userDataClass.setName(userInfo.get("name").getAsString());
-                        userDataClass.setSign(userInfo.get("sign").getAsString());
-                    } catch (NullPointerException e) {
-                        e.getCause();
-                    }
-                }
-            });
-
-            try {
-                getInfo.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            addCard(userDataClass.getHead(), danmu, userDataClass.getMid());
-        }
+        System.out.println(danmulist.size());
     }
 
-    private void addCard(Bitmap head, String msg, String uid) {
+    private void updatePage() {
+        for (int i = 0; i < 10; i++) {
+            if (i + page < danmulist.size()) {
+                String danmu = danmulist.get(i + page)[0];
+                final String shaid = danmulist.get(i + page)[1];
+                if (!shaMap.containsKey(shaid)) {
+                    final String uid = crc32Util.solve(shaid);
+
+                    Thread getInfo = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            UserDataClass userDataClass = new UserDataClass();
+                            BiliUtil biliUtil = new BiliUtil();
+                            try {
+                                JsonObject userInfo = biliUtil.getUpInfo(uid)
+                                        .get("data").getAsJsonObject()
+                                        .get("card").getAsJsonObject();
+
+                                String face = userInfo.get("face").getAsString();
+                                userDataClass.setHead(biliUtil.returnBitMap(face));
+                                userDataClass.setMid(uid);
+                                userDataClass.setName(userInfo.get("name").getAsString());
+                                userDataClass.setSign(userInfo.get("sign").getAsString());
+
+                                shaMap.put(shaid,userDataClass);
+                            } catch (NullPointerException e) {
+                                e.getCause();
+                            }
+                        }
+                    });
+
+                    getInfo.start();
+                    try {
+                        getInfo.join();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                addCard(danmu, shaid);
+            } else {
+                break;
+            }
+        }
+        page += 10;
+    }
+
+    private void addCard(String msg, String uid) {
         LinearLayout linearLayout = new LinearLayout(this);
         LinearLayout.LayoutParams layoutParams
                 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -173,6 +213,8 @@ public class DanmulistActivity extends AppCompatActivity {
                 = new LinearLayout.LayoutParams(ScreenUtil.dp2px(this, 50), ScreenUtil.dp2px(this, 50));
         headParam.setMargins(ScreenUtil.dp2px(this, 10), 0, 0, 0);
         headView.setLayoutParams(headParam);
+
+        Bitmap head = shaMap.get(uid).getHead();
         headView.setImageBitmap(head);
 
         TextView danmuText = new TextView(this);
@@ -192,11 +234,31 @@ public class DanmulistActivity extends AppCompatActivity {
         headView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println(idText.getText());
+
+//                System.out.println(name);
+                    showDialog(idText.getText().toString());
             }
         });
 
         danmulistlayout.addView(linearLayout);
     }
+
+    private void showDialog(String shaid) {
+        String name = shaMap.get(shaid).getName();
+        Bitmap head = shaMap.get(shaid).getHead();
+
+        View view = LayoutInflater.from(this).inflate(R.layout.head_dialog_layout,null,false);
+        final AlertDialog dialog = new AlertDialog.Builder(this).setView(view).create();
+
+        ImageView headView = view.findViewById(R.id.cardHead);
+        headView.setImageBitmap(head);
+
+        TextView nameView = view.findViewById(R.id.cardName);
+        nameView.setText(name);
+
+        dialog.show();
+        Objects.requireNonNull(dialog.getWindow()).setLayout((int) (ScreenUtil.getScreenWidthPix(this) * 0.75), LinearLayout.LayoutParams.WRAP_CONTENT);
+    }
+
 }
 
