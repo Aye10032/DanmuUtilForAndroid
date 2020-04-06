@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -26,6 +27,7 @@ import com.aye10032.danmuutilforandroid.util.CRC32Util;
 import com.aye10032.danmuutilforandroid.util.ScreenUtil;
 import com.google.gson.JsonObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +40,7 @@ public class DanmulistActivity extends AppCompatActivity {
     String[] cidlist;
     String[] partlist;
 
+    EditText aimET;
     TextView listTV;
     TextView searchTV;
     int choice;
@@ -60,6 +63,7 @@ public class DanmulistActivity extends AppCompatActivity {
         searchTV = findViewById(R.id.danmuTV);
         scrollView = findViewById(R.id.danmuSV);
         danmulistlayout = findViewById(R.id.danmuLL);
+        aimET = findViewById(R.id.danmuET);
         flag = true;
         crc32Util = new CRC32Util();
 
@@ -73,6 +77,29 @@ public class DanmulistActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 showSingleChoiceDialog(partlist);
+            }
+        });
+
+        searchTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String aim = aimET.getText().toString();
+                if (aim.equals("")) {
+                    Toast.makeText(DanmulistActivity.this, "未输入关键词", Toast.LENGTH_SHORT).show();
+                } else {
+                    danmulistlayout.removeAllViews();
+                    List<String[]> templist = new ArrayList<>();
+                    for (String[] data : danmulist) {
+                        if (data[0].contains(aim)) {
+                            templist.add(data);
+                        }
+                    }
+                    danmulist.clear();
+                    danmulist = templist;
+
+                    page = 0;
+                    updatePage();
+                }
             }
         });
 
@@ -117,6 +144,7 @@ public class DanmulistActivity extends AppCompatActivity {
                                     Toast.LENGTH_SHORT).show();
                             updateDanmu(choice);
                             danmulistlayout.removeAllViews();
+                            page = 0;
                             updatePage();
                         }
                     }

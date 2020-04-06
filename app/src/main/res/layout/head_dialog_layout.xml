@@ -50,6 +50,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:paddingLeft="5dp"
+        android:paddingTop="5dp"
+        android:paddingRight="5dp"
+        android:paddingBottom="5dp"
         android:text="pigeonhome唯一指定背锅侠\n三麻真好玩\n网站：http://www.aye10032.com\n群：583991760"
         android:textColor="@color/colorBlack" />
 

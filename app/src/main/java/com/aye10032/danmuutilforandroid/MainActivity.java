@@ -108,14 +108,16 @@ public class MainActivity extends AppCompatActivity {
         linearLayout.setBackgroundResource(R.drawable.shape_ll);
 
         LinearLayout.LayoutParams layoutParam
-                = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ScreenUtil.dp2px(this, 110));
+                = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                ScreenUtil.dp2px(this, 110));
         layoutParam.setMargins(0, ScreenUtil.dp2px(this, 10), 0, 0);
 
         linearLayout.setLayoutParams(layoutParam);
 
         ImageView imageView = new ImageView(this);
         LinearLayout.LayoutParams imgParam
-                = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 3.5f);
+                = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT, 3.5f);
         imgParam.setMargins(ScreenUtil.dp2px(this, 10), 0, 0, 0);
         imageView.setLayoutParams(imgParam);
         imageView.setImageBitmap(data.getImg());
@@ -125,7 +127,8 @@ public class MainActivity extends AppCompatActivity {
         titleLayout.setOrientation(LinearLayout.VERTICAL);
         titleLayout.setGravity(Gravity.CENTER);
         titleLayout.setLayoutParams(
-                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 2.0f));
+                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT, 2.0f));
 
         TextView titleText = new TextView(this);
         titleText.setTextSize(20);
@@ -133,7 +136,8 @@ public class MainActivity extends AppCompatActivity {
         titleText.setGravity(Gravity.CENTER);
         titleText.setText(data.getTitle());
         LinearLayout.LayoutParams titleParam
-                = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 1.0f);
+                = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT, 1.0f);
         titleParam.setMargins(ScreenUtil.dp2px(this, 10), 0, ScreenUtil.dp2px(this, 10), 0);
         titleText.setLayoutParams(titleParam);
 
@@ -141,7 +145,8 @@ public class MainActivity extends AppCompatActivity {
         midText.setGravity(Gravity.LEFT);
         midText.setText(data.getMid());
         LinearLayout.LayoutParams midParam
-                = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 2.0f);
+                = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT, 2.0f);
         midParam.setMargins(ScreenUtil.dp2px(this, 10), 0, ScreenUtil.dp2px(this, 10), 0);
         midText.setLayoutParams(midParam);
 
@@ -149,7 +154,8 @@ public class MainActivity extends AppCompatActivity {
         upText.setGravity(Gravity.LEFT);
         upText.setText(String.format("up主:%s", data.getUp()));
         LinearLayout.LayoutParams upParam
-                = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 2.0f);
+                = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT, 2.0f);
         upParam.setMargins(ScreenUtil.dp2px(this, 10), 0, ScreenUtil.dp2px(this, 10), 0);
         upText.setLayoutParams(upParam);
 
@@ -169,8 +175,8 @@ public class MainActivity extends AppCompatActivity {
                 String[] part = Objects.requireNonNull(searchmap.get(bv)).get(1);
                 Intent intent = new Intent(MainActivity.this, DanmulistActivity.class);
                 intent.putExtra("bvid", bv);
-                intent.putExtra("cid",cid);
-                intent.putExtra("part",part);
+                intent.putExtra("cid", cid);
+                intent.putExtra("part", part);
                 startActivity(intent);
             }
         });
