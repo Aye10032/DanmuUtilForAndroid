@@ -8,18 +8,11 @@ public class UserDataClass {
     private String name;
     private Bitmap head;
     private String sign;
+    private int level;
 
     public UserDataClass(){
 
     }
-
-    public UserDataClass(String mid, String name, Bitmap head, String sign) {
-        setMid(mid);
-        setName(name);
-        setHead(head);
-        setSign(sign);
-    }
-
 
     public Bitmap getHead() {
         return head;
@@ -51,5 +44,13 @@ public class UserDataClass {
 
     public void setSign(String sign) {
         this.sign = sign;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
     }
 }

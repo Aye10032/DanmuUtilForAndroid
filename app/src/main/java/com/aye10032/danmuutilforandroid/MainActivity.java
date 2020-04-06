@@ -1,7 +1,5 @@
 package com.aye10032.danmuutilforandroid;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -14,6 +12,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.aye10032.danmuutilforandroid.data.VideoData;
 import com.aye10032.danmuutilforandroid.util.AyeCompile;
 import com.aye10032.danmuutilforandroid.util.BiliInfo;
@@ -23,7 +23,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -129,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
                 new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 2.0f));
 
         TextView titleText = new TextView(this);
-        titleText.setTextSize(25);
+        titleText.setTextSize(20);
         titleText.setTextColor(Color.BLACK);
         titleText.setGravity(Gravity.CENTER);
         titleText.setText(data.getTitle());

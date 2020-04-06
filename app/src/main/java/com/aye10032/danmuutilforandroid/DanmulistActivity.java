@@ -1,13 +1,13 @@
 package com.aye10032.danmuutilforandroid;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -15,6 +15,10 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.StyleRes;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.aye10032.danmuutilforandroid.data.UserDataClass;
 import com.aye10032.danmuutilforandroid.util.BiliUtil;
@@ -25,7 +29,6 @@ import com.google.gson.JsonObject;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 public class DanmulistActivity extends AppCompatActivity {
 
@@ -165,8 +168,9 @@ public class DanmulistActivity extends AppCompatActivity {
                                 userDataClass.setMid(uid);
                                 userDataClass.setName(userInfo.get("name").getAsString());
                                 userDataClass.setSign(userInfo.get("sign").getAsString());
+                                userDataClass.setLevel(userInfo.getAsJsonObject("level_info").get("current_level").getAsInt());
 
-                                shaMap.put(shaid,userDataClass);
+                                shaMap.put(shaid, userDataClass);
                             } catch (NullPointerException e) {
                                 e.getCause();
                             }
@@ -234,30 +238,84 @@ public class DanmulistActivity extends AppCompatActivity {
         headView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-//                System.out.println(name);
-                    showDialog(idText.getText().toString());
+                HeadDialog dialog = new HeadDialog(DanmulistActivity.this, idText.getText().toString());
+                dialog.show();
             }
         });
 
         danmulistlayout.addView(linearLayout);
     }
 
-    private void showDialog(String shaid) {
-        String name = shaMap.get(shaid).getName();
-        Bitmap head = shaMap.get(shaid).getHead();
+    class HeadDialog extends Dialog {
 
-        View view = LayoutInflater.from(this).inflate(R.layout.head_dialog_layout,null,false);
-        final AlertDialog dialog = new AlertDialog.Builder(this).setView(view).create();
+        public HeadDialog(@NonNull Context context, String shaid) {
+            this(context, R.style.cornerdialog, shaid);
+        }
 
-        ImageView headView = view.findViewById(R.id.cardHead);
-        headView.setImageBitmap(head);
+        public HeadDialog(@NonNull Context context, @StyleRes int themeResId, String shaid) {
+            super(context, themeResId);
+            init(shaid);
+        }
 
-        TextView nameView = view.findViewById(R.id.cardName);
-        nameView.setText(name);
+        private void init(String shaid) {
+            UserDataClass userData = shaMap.get(shaid);
+            String name = userData.getName();
+            Bitmap head = userData.getHead();
+            final String uid = userData.getMid();
+            String sign = userData.getSign();
+            String level = "LV." + userData.getLevel();
 
-        dialog.show();
-        Objects.requireNonNull(dialog.getWindow()).setLayout((int) (ScreenUtil.getScreenWidthPix(this) * 0.75), LinearLayout.LayoutParams.WRAP_CONTENT);
+            this.setContentView(R.layout.head_dialog_layout);
+            ImageView headView = this.findViewById(R.id.cardHead);
+            headView.setImageBitmap(head);
+
+            TextView nameView = this.findViewById(R.id.cardName);
+            nameView.setText(name);
+
+            TextView uidView = this.findViewById(R.id.cardUid);
+            uidView.setText(String.format("uid:%s", uid));
+
+            TextView levelView = this.findViewById(R.id.cardLevel);
+            levelView.setText(level);
+            switch (userData.getLevel()) {
+                case 0:
+                    levelView.setBackgroundColor(getColor(R.color.colorLV0));
+                    break;
+                case 1:
+                    levelView.setBackgroundColor(getColor(R.color.colorLV1));
+                    break;
+                case 2:
+                    levelView.setBackgroundColor(getColor(R.color.colorLV2));
+                    break;
+                case 3:
+                    levelView.setBackgroundColor(getColor(R.color.colorLV3));
+                    break;
+                case 4:
+                    levelView.setBackgroundColor(getColor(R.color.colorLV4));
+                    break;
+                case 5:
+                    levelView.setBackgroundColor(getColor(R.color.colorLV5));
+                    break;
+                case 6:
+                    levelView.setBackgroundColor(getColor(R.color.colorLV6));
+                    break;
+            }
+
+            TextView signView = this.findViewById(R.id.cardSign);
+            signView.setText(sign);
+
+            headView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent();
+                    intent.setAction("android.intent.action.VIEW");
+                    Uri content_url = Uri.parse("https://space.bilibili.com/" + uid);
+                    System.out.println(content_url);
+                    intent.setData(content_url);
+                    startActivity(intent);
+                }
+            });
+        }
     }
 
 }

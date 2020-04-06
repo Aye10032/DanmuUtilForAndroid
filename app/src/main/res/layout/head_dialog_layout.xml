@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="280dp"
     android:layout_height="wrap_content"
+    android:background="@drawable/shape_head"
+    android:gravity="center"
     android:orientation="vertical">
 
     <ImageView
@@ -20,6 +22,35 @@
         android:layout_marginTop="20dp"
         android:textSize="20sp"
         android:textColor="@color/colorBlack"
+        android:paddingBottom="5dp"
         android:text="Aye10032"/>
+
+    <TextView
+        android:id="@+id/cardUid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingBottom="5dp"
+        android:text="uid:114514"
+        android:textColor="@color/colorBlack" />
+
+    <TextView
+        android:id="@+id/cardLevel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/colorLV5"
+        android:gravity="center"
+        android:paddingLeft="3dp"
+        android:paddingRight="3dp"
+        android:text="LV.5"
+        android:textColor="@color/colorWhite" />
+
+    <TextView
+        android:id="@+id/cardSign"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="pigeonhome唯一指定背锅侠\n三麻真好玩\n网站：http://www.aye10032.com\n群：583991760"
+        android:textColor="@color/colorBlack" />
 
 </LinearLayout>

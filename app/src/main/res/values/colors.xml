@@ -9,4 +9,11 @@
     <color name="colorBackground">#1070a1ff</color>
     <color name="colorBG1">#FCF3CF</color>
     <color name="colorBG2">#D5F5E3</color>
+    <color name="colorLV0">#BFBFBF</color>
+    <color name="colorLV1">#BFBFBF</color>
+    <color name="colorLV2">#95DDB2</color>
+    <color name="colorLV3">#92D1E5</color>
+    <color name="colorLV4">#FFB37C</color>
+    <color name="colorLV5">#FF6C00</color>
+    <color name="colorLV6">#FF0000</color>
 </resources>
