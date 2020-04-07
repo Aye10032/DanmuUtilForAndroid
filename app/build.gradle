@@ -20,6 +20,16 @@ android {
         }
     }
 
+    applicationVariants.all {variant ->
+        variant.outputs.all {output ->
+            if (variant.buildType.name == "debug") {
+                output.outputFileName = "${android.defaultConfig.applicationId}_debug_${android.defaultConfig.versionName}.apk"
+            } else if (variant.buildType.name == "release") {
+                output.outputFileName = "${android.defaultConfig.applicationId}_release_${android.defaultConfig.versionName}.apk"
+            }
+        }
+    }
+
     useLibrary 'org.apache.http.legacy'
 
     packagingOptions {
