@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         avinput = findViewById(R.id.avET);
-        TextView getText = findViewById(R.id.searchTV);
+        final TextView getText = findViewById(R.id.searchTV);
         searchlist = findViewById(R.id.searchresultLL);
 
         getText.setOnClickListener(new View.OnClickListener() {
@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
                     flag = true;
                 }
                 if (flag) {
+                    getText.setClickable(false);
                     final String finalMid = mid;
                     Thread getmsg = new Thread(new Runnable() {
                         @Override
@@ -82,7 +83,9 @@ public class MainActivity extends AppCompatActivity {
                     list.add(data.getCidlist());
                     list.add(data.getPartlist());
                     searchmap.put(data.getMid(), list);
+                    searchlist.removeAllViews();
                     addCard();
+                    getText.setClickable(true);
                 } else {
                     Toast.makeText(MainActivity.this, "格式错误，请重试", Toast.LENGTH_SHORT).show();
                 }
@@ -102,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void addCard() {
-        LinearLayout linearLayout = new LinearLayout(this);
+        final LinearLayout linearLayout = new LinearLayout(this);
         linearLayout.setOrientation(LinearLayout.HORIZONTAL);
         linearLayout.setGravity(Gravity.CENTER_HORIZONTAL);
         linearLayout.setBackgroundResource(R.drawable.shape_ll);
@@ -133,8 +136,12 @@ public class MainActivity extends AppCompatActivity {
         TextView titleText = new TextView(this);
         titleText.setTextSize(20);
         titleText.setTextColor(Color.BLACK);
-        titleText.setGravity(Gravity.CENTER);
-        titleText.setText(data.getTitle());
+        titleText.setGravity(Gravity.LEFT);
+        String title = data.getTitle();
+        if (title.length() > 25) {
+            title = title.substring(0, 25) + "...";
+        }
+        titleText.setText(title);
         LinearLayout.LayoutParams titleParam
                 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT, 1.0f);
@@ -170,6 +177,7 @@ public class MainActivity extends AppCompatActivity {
         linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                linearLayout.setClickable(false);
                 String bv = midText.getText().toString();
                 String[] cid = Objects.requireNonNull(searchmap.get(bv)).get(0);
                 String[] part = Objects.requireNonNull(searchmap.get(bv)).get(1);
@@ -178,6 +186,7 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("cid", cid);
                 intent.putExtra("part", part);
                 startActivity(intent);
+                linearLayout.setClickable(true);
             }
         });
     }

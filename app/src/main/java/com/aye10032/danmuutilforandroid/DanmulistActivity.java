@@ -87,18 +87,22 @@ public class DanmulistActivity extends AppCompatActivity {
                 if (aim.equals("")) {
                     Toast.makeText(DanmulistActivity.this, "未输入关键词", Toast.LENGTH_SHORT).show();
                 } else {
-                    danmulistlayout.removeAllViews();
                     List<String[]> templist = new ArrayList<>();
                     for (String[] data : danmulist) {
                         if (data[0].contains(aim)) {
                             templist.add(data);
                         }
                     }
-                    danmulist.clear();
-                    danmulist = templist;
+                    if (templist.size() != 0) {
+                        danmulist.clear();
+                        danmulist = templist;
+                        danmulistlayout.removeAllViews();
 
-                    page = 0;
-                    updatePage();
+                        page = 0;
+                        updatePage();
+                    } else {
+                        Toast.makeText(DanmulistActivity.this, "未找到相应关键词", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
@@ -144,6 +148,7 @@ public class DanmulistActivity extends AppCompatActivity {
                                     Toast.LENGTH_SHORT).show();
                             updateDanmu(choice);
                             danmulistlayout.removeAllViews();
+                            aimET.setText("");
                             page = 0;
                             updatePage();
                         }
@@ -254,7 +259,8 @@ public class DanmulistActivity extends AppCompatActivity {
                 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         danmuParams.setMargins(ScreenUtil.dp2px(this, 10), 0, ScreenUtil.dp2px(this, 10), 0);
         danmuText.setLayoutParams(danmuParams);
-        danmuText.setPadding(ScreenUtil.dp2px(this, 5), ScreenUtil.dp2px(this, 5), ScreenUtil.dp2px(this, 5), ScreenUtil.dp2px(this, 5));
+        danmuText.setPadding(ScreenUtil.dp2px(this, 5), ScreenUtil.dp2px(this, 5), ScreenUtil.dp2px(this, 5),
+                ScreenUtil.dp2px(this, 5));
         danmuText.setText(msg);
         danmuText.setTextSize(25);
         danmuText.setBackground(getDrawable(R.drawable.shape_danmu));

@@ -26,10 +26,11 @@
 
             <TextView
                 android:id="@+id/listText"
-                android:layout_width="50dp"
+                android:layout_width="45dp"
                 android:layout_height="match_parent"
                 android:background="@drawable/list"
                 android:focusable="true"
+                android:layout_marginLeft="10dp"
                 android:clickable="true"/>
 
             <EditText
