@@ -16,7 +16,8 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -39,6 +40,8 @@ public class BiliInfo {
     private String mid = "";
 
     private Bitmap img = null;
+
+    private boolean videoAvailable;
 
     List<String> cidlist = new ArrayList<>();
     List<String> partlist = new ArrayList<>();
@@ -95,8 +98,11 @@ public class BiliInfo {
             }
 
             img = returnBitMap(imgurl);
-        } catch (IOException e) {
+
+            setVideoAvailable(true);
+        } catch (NullPointerException | IOException e) {
             e.printStackTrace();
+            setVideoAvailable(false);
         }
 
     }
@@ -104,13 +110,6 @@ public class BiliInfo {
     public Bitmap returnBitMap(final String url) {
 
         final Bitmap[] bitmap = new Bitmap[1];
-
-        /*new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-            }
-        }).start();*/
         URL imageurl = null;
 
         try {
@@ -170,5 +169,13 @@ public class BiliInfo {
         }
 
         return part;
+    }
+
+    public boolean isVideoAvailable() {
+        return videoAvailable;
+    }
+
+    public void setVideoAvailable(boolean videoAvailable) {
+        this.videoAvailable = videoAvailable;
     }
 }

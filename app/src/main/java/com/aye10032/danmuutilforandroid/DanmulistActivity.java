@@ -51,6 +51,7 @@ public class DanmulistActivity extends AppCompatActivity {
 //    UserDataClass userDataClass = new UserDataClass();
 
     boolean flag;
+    boolean loadfinish;
 
     int page = 0;
 
@@ -65,6 +66,7 @@ public class DanmulistActivity extends AppCompatActivity {
         danmulistlayout = findViewById(R.id.danmuLL);
         aimET = findViewById(R.id.danmuET);
         flag = true;
+        loadfinish = true;
         crc32Util = new CRC32Util();
 
         Intent intent = getIntent();
@@ -111,12 +113,14 @@ public class DanmulistActivity extends AppCompatActivity {
             @Override
             public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
                 View contentView = scrollView.getChildAt(0);
-                if (contentView != null && contentView.getMeasuredHeight() == scrollView.getScrollY() + scrollView.getHeight()) {
+                if (contentView != null && contentView.getMeasuredHeight() == scrollView.getScrollY() + scrollView.getHeight() && loadfinish) {
                     if (page > danmulist.size()) {
                         Toast.makeText(DanmulistActivity.this, "已经是最后了", Toast.LENGTH_SHORT).show();
                     } else {
+                        loadfinish = false;
                         updatePage();
                         Toast.makeText(DanmulistActivity.this, "已加载", Toast.LENGTH_SHORT).show();
+                        loadfinish = true;
                     }
                 }
             }

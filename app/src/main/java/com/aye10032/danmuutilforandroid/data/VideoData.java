@@ -13,6 +13,8 @@ public class VideoData {
     private String[] cidlist;
     private String[] partlist;
 
+    private boolean videoAvialible;
+
     public VideoData() {
 
     }
@@ -41,6 +43,10 @@ public class VideoData {
         this.partlist = partlist;
     }
 
+    public boolean isVideoAvialible() {
+        return videoAvialible;
+    }
+
     public String getTitle() {
         return this.title;
     }
@@ -63,5 +69,9 @@ public class VideoData {
 
     public String[] getPartlist() {
         return partlist;
+    }
+
+    public void setVideoAvialible(boolean videoAvialible) {
+        this.videoAvialible = videoAvialible;
     }
 }

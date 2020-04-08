@@ -51,13 +51,15 @@ public class MainActivity extends AppCompatActivity {
                 String mid = avinput.getText().toString();
                 AyeCompile compile = new AyeCompile(mid);
                 boolean flag = false;
-                if (compile.hasAV()) {
-                    mid = compile.getAVString();
-                    flag = true;
-                } else if (compile.hasBV()) {
+
+                if (compile.hasBV()) {
                     mid = compile.getBVString();
                     flag = true;
+                } else if (compile.hasAV()) {
+                    mid = compile.getAVString();
+                    flag = true;
                 }
+
                 if (flag) {
                     getText.setClickable(false);
                     final String finalMid = mid;
@@ -71,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
                             data.setMid(biliInfo.getMid());
                             data.setCidlist(biliInfo.getCid());
                             data.setPartlist(biliInfo.getPart());
+                            data.setVideoAvialible(biliInfo.isVideoAvailable());
                         }
                     });
                     getmsg.start();
@@ -79,12 +82,16 @@ public class MainActivity extends AppCompatActivity {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    List<String[]> list = new ArrayList<>();
-                    list.add(data.getCidlist());
-                    list.add(data.getPartlist());
-                    searchmap.put(data.getMid(), list);
-                    searchlist.removeAllViews();
-                    addCard();
+                    if (data.isVideoAvialible()) {
+                        List<String[]> list = new ArrayList<>();
+                        list.add(data.getCidlist());
+                        list.add(data.getPartlist());
+                        searchmap.put(data.getMid(), list);
+                        searchlist.removeAllViews();
+                        addCard();
+                    } else {
+                        Toast.makeText(MainActivity.this, "这个视频被神隐啦，换一个吧", Toast.LENGTH_SHORT).show();
+                    }
                     getText.setClickable(true);
                 } else {
                     Toast.makeText(MainActivity.this, "格式错误，请重试", Toast.LENGTH_SHORT).show();

@@ -30,7 +30,7 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/list"
                 android:focusable="true"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="6dp"
                 android:clickable="true"/>
 
             <EditText
@@ -40,7 +40,7 @@
                 android:layout_gravity="center"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:layout_weight="1.3"
+                android:layout_weight="1.4"
                 android:autofillHints=""
                 android:background="@drawable/shape_text"
                 android:drawableStart="@drawable/search"
